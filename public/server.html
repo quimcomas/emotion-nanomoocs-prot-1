@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>NanoMoocs project server</title>
+</head>
+<style>
+    .pred-container {
+        margin-bottom: 20px;
+    }
+
+    .pred-container > div {
+        display: inline-block;
+        margin-right: 20px;
+        vertical-align: top;
+    }
+
+    .row {
+        display: table-row;
+    }
+    .cell {
+        display: table-cell;
+        padding-right: 20px;
+    }
+    #overlay, .overlay {
+        position: relative;
+        top: 0;
+        left: 0;
+    }
+
+    #download {
+        float:left;
+        cursor:pointer;
+        color:#ccc;
+        padding:3px;
+    }
+    #download:hover {
+        color:#fff;
+    }
+
+    #file-container {
+        margin-bottom: 20px;
+    }
+</style>
+
+<body>
+<div>
+    <script src='https://cdn.jsdelivr.net/lodash/4.17.2/lodash.min.js'></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.2/Chart.bundle.js"></script>
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+</div>
+    <h1>NanoMoocs project server</h1>
+
+
+        <div style="position:absolute; top:570px; left:650px;width: 850px;" class="margin">
+            <section>
+                <canvas id="chart_0" width="500" height="300"></canvas>
+            </section>
+        </div>
+
+
+        <div style="position:absolute; top:120px; left:650px;width: 850px;" class="margin">
+            <section>
+                <canvas id="chart" width="500" height="300"></canvas>
+            </section>
+        </div>
+
+        <div style="position:absolute; top:70px; left:550px;width: 850px;" class="margin">
+            <section>
+                Choose a student:
+                <select id="foo"> </select>
+            </section>
+        </div>
+
+
+
+        <script>
+            getData()
+        async function getData() {
+
+            const res = await fetch('/api');
+            const data = await res.json();
+            console.log(data);
+
+            const ctx_0 = document.getElementById('chart_0');
+            let plot_0;
+            plot_0 = new Chart(ctx_0, {
+                type: 'doughnut',
+                data: {
+                    labels: ["Neutral", "Happiness", "Sadness", "Surprise", "Fear", "Disgust","Anger","Contempt"],
+                    datasets: [
+                        {
+                            label: "Students",
+                            backgroundColor: ["#3e95cd", "#8e5ea2","#3cba9f","#e8c3b9","#c45850","#a49850","#c77950","#B9DEE8"],
+                            data: []
+                        }]
+                },
+                options: {
+                    legend: { display: true },
+                    title: {
+                        display: true,
+                        text: 'Global emotion state prediction'
+                    }
+                }
+            });
+
+            async function addData_0(neutral, happiness,sadness,surprise,fear,disgust,anger,contempt) {
+                plot_0.data.datasets[0].data.push(neutral,happiness,sadness, surprise,fear,disgust,anger,contempt);
+                plot_0.update();
+            }
+
+            const ctx = document.getElementById('chart');
+            let plot = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    datasets: [
+                        {
+                            data: [],
+                            label: "Neutral",
+                            borderColor: "#3e95cd",
+                            backgroundColor: '#3e95cd',
+                            fill: false
+                        }, {
+                            data: [],
+                            label: "Happiness",
+                            borderColor: "#8e5ea2",
+                            backgroundColor: '#8e5ea2',
+                            fill: false
+                        }, {
+                            data: [],
+                            label: "Sadness",
+                            borderColor: "#3cba9f",
+                            backgroundColor: '#3cba9f',
+                            fill: false
+                        }, {
+                            data: [],
+                            label: "Surprise",
+                            borderColor: "#e8c3b9",
+                            backgroundColor: '#e8c3b9',
+                            fill: false
+                        }, {
+                            data: [],
+                            label: "Fear",
+                            borderColor: "#c45850",
+                            backgroundColor: '#c45850',
+                            fill: false
+                        }, {
+                            data: [],
+                            label: "Disgust",
+                            borderColor: "#a49850",
+                            backgroundColor: '#a49850',
+                            fill: false
+                        }, {
+                            data: [],
+                            label: "Anger",
+                            borderColor: "#c77950",
+                            backgroundColor: '#c77950',
+                            fill: false
+                        }, {
+                            data: [],
+                            label: "Contempt",
+                            borderColor: "#B9DEE8",
+                            backgroundColor: '#B9DEE8',
+                            fill: false
+                        }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    title: {
+                        display: true,
+                        text: 'Discrete emotion recognition for a single student',
+                        position: 'top'
+                    },
+                    legend: {
+                        display: true,
+                        position: 'right',
+                    },
+                    scales: {
+                        xAxes: [{
+                            type: 'time',
+                            time: {
+                                unit: 'second'
+                            }, scaleLabel: {
+                                display: true,
+                                labelString: 'Time'
+                            }
+                        }],
+                        yAxes: [{
+                            ticks: {},
+                            scaleLabel: {
+                                display: true,
+                                labelString: 'Probability'
+                            }
+                        },
+                        ]
+                    }
+                }
+            });
+
+
+            function addData(neu, hap, sad, sur, fea, dis, ang, con, time) {
+
+                plot.data.labels= time;
+                plot.data.datasets[0].data = neu;
+                plot.data.datasets[1].data = hap;
+                plot.data.datasets[2].data = sad;
+                plot.data.datasets[3].data = sur;
+                plot.data.datasets[4].data = fea;
+                plot.data.datasets[5].data = dis;
+                plot.data.datasets[6].data = ang;
+                plot.data.datasets[7].data = con;
+
+            }
+
+            function dynamicsort(property,order) {
+                var sort_order = 1;
+                if(order === "desc"){
+                    sort_order = -1;
+                }
+                return function (a, b){
+                    // a should come before b in the sorted order
+                    if(a[property] < b[property]){
+                        return -1 * sort_order;
+                        // a should come after b in the sorted order
+                    }else if(a[property] > b[property]){
+                        return 1 * sort_order;
+                        // a and b are the same
+                    }else{
+                        return 0 * sort_order;
+                    }
+                }
+            }
+
+            console.log("Data to be sorted");
+            console.log(data);
+            console.log("Sorting Data based on the timestamp property")
+            console.log(data.sort(dynamicsort("timestamp","asc")));
+
+
+            const groupBy = (array, key) => {
+                // Return the end result
+                return array.reduce((result, currentValue) => {
+                    // If an array already present for key, push it to the array. Else create an array and push the object
+                    (result[currentValue[key]] = result[currentValue[key]] || []).push(
+                        currentValue
+                    );
+                    // Return the current iteration `result` value, this will be taken as next iteration `result` value and accumulate
+                    return result;
+                }, {}); // empty object is the initial value for result object
+            };
+
+            let users = groupBy(data, 'name_user');
+
+            var key, count = 0;
+
+            for (key in users) {
+                if (users.hasOwnProperty(key))
+                    count++;
+            }
+            let num_users = count;
+
+            console.log(num_users)
+
+            let neutral = 0
+            let happiness = 0
+            let sadness = 0
+            let surprise = 0
+            let fear = 0
+            let disgust = 0
+            let anger = 0
+            let contempt = 0
+            let emotions = []
+
+            for (key in users) {
+                console.log(key)
+
+                const root = document.createElement('p');
+                const ima = document.createElement('p')
+                const name_user = document.createElement('div');
+                name_user.textContent = `Student Name: ${key}`;
+                let elm = document.getElementById('foo'),
+                    df = document.createDocumentFragment();
+                let option = document.createElement('option');
+                option.value = key; // set the value property
+                option.appendChild(document.createTextNode(key));
+                df.appendChild(option);
+                elm.appendChild(df);
+
+                let tim = []
+                let neu = []
+                let hap = []
+                let sad = []
+                let sur = []
+                let fea = []
+                let dis = []
+                let ang = []
+                let con = []
+                console.log(users[key])
+                for (item of users[key]) {
+
+                    if (item.emotion_name==='neutral'){
+                        neutral=++neutral
+                    }
+                    if (item.emotion_name==='Happiness'){
+                        happiness=++happiness
+                    }
+                    if (item.emotion_name==='Sadness'){
+                        sadness=++sadness
+                    }
+                    if (item.emotion_name==='Surprise'){
+                        surprise=++surprise
+                    }
+                    if (item.emotion_name==='Fear'){
+                        fear=++fear
+                    }
+                    if (item.emotion_name==='Disgust'){
+                        disgust=++disgust
+                    }
+                    if (item.emotion_name==='Anger'){
+                        anger=++anger
+                    }
+                    if (item.emotion_name==='Contempt'){
+                        contempt=++contempt
+                    }
+
+                    const Neutral = document.createElement('div');
+                    const Happiness = document.createElement('div');
+                    const Sadness = document.createElement('div');
+                    const Surprise = document.createElement('div');
+                    const Fear = document.createElement('div');
+                    const Disgust = document.createElement('div');
+                    const Anger = document.createElement('div');
+                    const Contempt = document.createElement('div');
+                    const Emotion = document.createElement('div');
+                    const date = document.createElement('div');
+                    const image = document.createElement('img');
+
+
+                    const dateString = new Date(item.timestamp).toLocaleString();
+                    Emotion.textContent = `Emotion: ${item.emotion_name}`;
+                    Neutral.textContent = `Neutral_prob: ${item.values[0]}`;
+                    Happiness.textContent = `Happiness_prob: ${item.values[1]}`;
+                    Sadness.textContent = `Sadness_prob: ${item.values[2]}`;
+                    Surprise.textContent = `Surprise_prob: ${item.values[3]}`;
+                    Fear.textContent = `Fear_prob: ${item.values[4]}`;
+                    Disgust.textContent = `Disgust_prob: ${item.values[5]}`;
+                    Anger.textContent = `Anger_prob: ${item.values[6]}`;
+                    Contempt.textContent = `Contempt_prob: ${item.values[7]}`;
+
+                    date.textContent = dateString;
+                    image.src = item.image64;
+                    image.height = 64
+                    image.width = 64
+
+                    root.append(date,Emotion,'---------------------------');
+                    ima.append(image);
+                    document.body.append(name_user,root,ima);
+
+                    console.log(item)
+                    neu.push(item.values[0])
+                    hap.push(item.values[1])
+                    sad.push(item.values[2])
+                    sur.push(item.values[3])
+                    fea.push(item.values[4])
+                    dis.push(item.values[5])
+                    ang.push(item.values[6])
+                    con.push(item.values[7])
+                    tim.push(item.timestamp)
+
+                }
+                emotions.push({superkey: key, key:'neutral', value:neu},{superkey: key, key:'happiness',
+                        value:hap},{superkey: key, key:'sadness', value:sad},{superkey: key, key:'surprise',
+                        value:sur},{superkey: key, key:'fear', value:fea},{superkey: key, key:'disgust', value:dis},
+                    {superkey: key, key:'anger', value:ang},{superkey: key, key:'contempt', value:con},{superkey: key, key:'time', value:tim})
+
+
+            }
+
+
+            var emo_users = _.mapValues(_.groupBy(emotions, 'superkey'),
+                clist => clist.map(emotions => _.omit(emotions, 'superkey')));
+            console.log(emotions)
+
+            function refreshChart(name)
+            {
+                addData(name[0].value, name[1].value, name[2].value,
+                        name[3].value, name[4].value, name[5].value, name[6].value,
+                        name[7].value, name[8].value)
+
+                plot.update()
+            }
+
+            $('#foo').change(function(){
+                console.log($('#foo').val());
+                refreshChart(emo_users[$('#foo').val()])
+            }).trigger('change');
+
+            await addData_0(neutral,happiness,sadness,surprise,fear,disgust,anger,contempt);
+        }
+
+        </script>
+
+
+
+
+
+
+</body>
+
+</html>

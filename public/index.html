@@ -1,0 +1,118 @@
+<!doctype html>
+
+<head>
+  <title>TensorFlow.js: Using a pretrained MobileNet</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    .merge {
+      margin-left: 0;
+      margin-top:  0;
+      position:    absolute;
+    }
+  </style>
+  <!--<link rel="stylesheet" href="../shared/tfjs-examples.css" />-->
+
+</head>
+
+<style>
+  .pred-container {
+    margin-bottom: 20px;
+  }
+
+  .pred-container > div {
+    display: inline-block;
+    margin-right: 20px;
+    vertical-align: top;
+  }
+
+  .row {
+    display: table-row;
+  }
+  .cell {
+    display: table-cell;
+    padding-right: 20px;
+  }
+  #overlay, .overlay {
+    position: relative;
+    top: 0;
+    left: 0;
+  }
+
+  #download {
+    float:left;
+    cursor:pointer;
+    color:#ccc;
+    padding:3px;
+  }
+  #download:hover {
+    color:#fff;
+  }
+
+  #file-container {
+    margin-bottom: 20px;
+  }
+</style>
+
+
+<body>
+
+<div class="tfjs-example-container">
+  <section class='title-area'>
+    <h1>Emotion recognition demo for NanoMoocs project</h1>
+  </section>
+
+  <section>
+    <p class='section-head'>Emotion recognition trained with Affecnet and CK+ datasets and optimized with TensorFlowJS</p>
+    <p>
+
+    </p>
+  </section>
+
+  <section>
+    <p class='section-head'>Status:</p>
+    <div id="status"></div>
+  </section>
+
+  <section>
+
+    <div style="position: relative;width: 300px;" class="margin">
+      <div style="position: absolute;top:70px; left:70px; width: 900px;" class="margin">
+      <video onloadedmetadata="onPlay(this)" id="video" preload playsinline autoplay loop muted class="merge"></video>
+      <canvas id="overlay"></canvas>
+      <img id="myImg" src="">
+    </div>
+    <br>
+    <section>
+      <div style="position: absolute;top:570px; left:250px; width: 900px;" class="margin">
+      <p>The current emotion is:  <span id="emotion"></span></p>
+      </div>
+    </section>
+
+    <section>
+      <div style="position: absolute;top:40px; left:180px; width: 900px;" class="margin">
+        Enter your name:
+        <input id="name" type="text" name="firstname" value="">
+        <input type="button" value="Submit" onclick="insert_name()">
+    <section>
+
+  <section>
+  <div style="position:absolute; top:130px; left:750px;width: 650px;" class="margin">
+  <section>
+    <canvas id="chart" width="800" height="300"></canvas>
+  </section>
+  </div>
+    <div>
+      <script src="https://github.com/eligrey/FileSaver.js/blob/master/src/FileSaver.js"></script>
+      <script src ="https://rawgit.com/eligrey/canvas-toBlob.js/master/canvas-toBlob.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.8.0/p5.min.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.8.0/addons/p5.dom.min.js"></script>
+      <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.2/Chart.bundle.js"></script>
+      <script defer src="face-api.min.js"></script>
+      <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@2.0.0/dist/tf.min.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.8.0/p5.min.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.8.0/addons/p5.dom.min.js"></script>
+      <script src="index.js"></script>
+    </div>
+<div>
+<body>
