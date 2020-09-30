@@ -1,0 +1,26 @@
+{
+  "name": "tfjs",
+  "version": "1.0.0",
+  "description": "Emotion recognition for nanomoocs project.",
+  "main": "main.js",
+  "dependencies": {
+    "body-parser": "^1.19.0",
+    "chart.js": "^2.9.3",
+    "cors": "^2.8.5",
+    "express": "^4.17.1",
+    "image-decode": "^1.2.2",
+    "nedb": "^1.8.0",
+    "serve": "^11.3.2"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "emotions",
+    "elearning",
+    "tensorjs"
+  ],
+  "author": "Quim Comas",
+  "license": "MIT"
+}
